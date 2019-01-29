@@ -5,3 +5,4 @@ target/
 *.clj~
 *.gz
 checkouts/
+sampledata.txt
