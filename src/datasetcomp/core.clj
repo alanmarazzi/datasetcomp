@@ -2,21 +2,26 @@
   (:require [spork.util.table :as tbl]
             [tech.ml.dataset.csv :as tech]
             [datasetcomp.tablesaw :as tablesaw]
-            [clj-memory-meter.core :as mm]))
+            [clj-memory-meter.core :as mm]
+            [criterium.core :as bch]))
 
 (def the-data (atom nil))
 ;;atypical def usage, this is for cleaning up resources.
 (defn clean! []
   (do (reset! the-data nil) (System/gc)))
 
-(defmacro timed-build [name & expr]
-  `(do  (println [:clearing-data-and-gcing])
-         (clean!)
-         (println [:evaluating ~name :as ~(list 'quote expr)])
-         (reset! ~'datasetcomp.core/the-data (time ~@expr))
-         (println [:measuring-memory-usage!])
-         (println (mm/measure (deref ~'datasetcomp.core/the-data)))))
-        
+;; (defmacro timed-build [name & expr]
+;;   `(do  (println [:clearing-data-and-gcing])
+;;          (clean!)
+;;          (println [:evaluating ~name :as ~(list 'quote expr)])
+;;          (reset! ~'datasetcomp.core/the-data (time ~@expr))
+;;          (println [:measuring-memory-usage!])
+;;          (println (mm/measure (deref ~'datasetcomp.core/the-data)))))
+
+(defn memsize
+  []
+  (mm/measure @the-data))
+
 ;;Monkey patched a couple of things into spork and tech
 (require 'datasetcomp.patches)
 ;;comparative testing...
@@ -24,7 +29,7 @@
   ;;about 197mb source file.
   ;;2386398 rows, 15 fields, mixture of numeric and text data.
   ;;available at 
-  (def events "sampledata.txt") 
+  (def events "sampledata.txt")
 
   ;;This is doing naive schema inference, with no fallback or widening of the
   ;;type restrictions (it'll fail ungracefully currently, and the inference

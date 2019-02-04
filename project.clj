@@ -9,5 +9,4 @@
                  [techascent/tech.ml-base "3.3"]
                  [tech.tablesaw/tablesaw-core "LATEST"]
                  [com.clojure-goes-fast/clj-memory-meter "0.1.2"]
-                 [org.apache.arrow/arrow-memory "0.12.0"]
-                 [org.apache.arrow/arrow-vector "0.12.0"]])
+                 [criterium "0.4.4"]])
